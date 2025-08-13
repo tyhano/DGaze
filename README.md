@@ -45,6 +45,5 @@ Step 2: Run the scripts "run_DGaze.sh" and "run_DGaze_ET.sh" in "scripts/" to re
   number = {5},
   pages = {1902--1911},
   year = {2020},
-  doi = {10.1109/TVCG.2020.2973473}
-}
+  doi = {10.1109/TVCG.2020.2973473}}
 ```
