@@ -38,12 +38,12 @@ Step 2: Run the scripts "run_DGaze.sh" and "run_DGaze_ET.sh" in "scripts/" to re
 ## Citation
 ```bibtex
 @article{hu20dgaze,
-  title = {DGaze: CNN-Based Gaze Prediction in Dynamic Scenes},
-  author = {Hu, Zhiming and Li, Sheng and Zhang, Congyi and Yi, Kangrui and Wang, Guoping and Manocha, Dinesh},
-  journal = {IEEE Transactions on Visualization and Computer Graphics},
-  volume = {26},
-  number = {5},
-  pages = {1902--1911},
-  year = {2020},
-  doi = {10.1109/TVCG.2020.2973473}}
+	title={DGaze: CNN-Based Gaze Prediction in Dynamic Scenes},
+	author={Hu, Zhiming and Li, Sheng and Zhang, Congyi and Yi, Kangrui and Wang, Guoping and Manocha, Dinesh},
+	journal={IEEE Transactions on Visualization and Computer Graphics},
+	volume={26},
+	number={5},
+	pages={1902--1911},
+	year={2020},
+	publisher={IEEE}}
 ```
