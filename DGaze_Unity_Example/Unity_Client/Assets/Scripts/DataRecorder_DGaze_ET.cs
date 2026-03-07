@@ -50,24 +50,27 @@ public class DataRecorder_DGaze_ET : MonoBehaviour
         // Eye Gaze Data
         // In real applications, get the gaze data from your eye tracker
         // (0, 0) at Bottom-left, (1, 1) at Top-right
-        float gazeX = Random.value;
-        float gazeY = Random.value;
+        Vector3 mousePos = Input.mousePosition;
+        float gazeX = Mathf.Clamp01(SanitizeFloat(mousePos.x / Screen.width));
+        float gazeY = Mathf.Clamp01(SanitizeFloat(mousePos.y / Screen.height));
+        GazeDebugState.SetCurrentGaze(new Vector2(gazeX, gazeY));
+
         Coordinate screenCoord;
         screenCoord.posX = gazeX;
         screenCoord.posY = gazeY;
         // DGaze Model uses angular coordinates as inputs.
         Coordinate angularCoord = ScreenCoord2AngularCoord(screenCoord);
-        string info = angularCoord.posX.ToString("f2") + "," + angularCoord.posY.ToString("f2") + ",";
+        string info = SanitizeFloat(angularCoord.posX).ToString("f2") + "," + SanitizeFloat(angularCoord.posY).ToString("f2") + ",";
 
 
         // Head Rotation Velocity
-        float headVelX = headCamera.GetComponent<CalculateHeadVelocity>().headVelX;
-        float headVelY = headCamera.GetComponent<CalculateHeadVelocity>().headVelY;
-        string trackedObjectsString = DynamicObjects.GetComponent<TrackObjects>().trackedObjectsString;            
+        float headVelX = SanitizeFloat(headCamera.GetComponent<CalculateHeadVelocity>().headVelX);
+        float headVelY = SanitizeFloat(headCamera.GetComponent<CalculateHeadVelocity>().headVelY);
+        string trackedObjectsString = DynamicObjects.GetComponent<TrackObjects>().trackedObjectsString;
         //Debug.Log("trackedObjectsString: " + trackedObjectsString);
         info += headVelX.ToString("f2") + "," + headVelY.ToString("f2") + "," + trackedObjectsString;
         //Debug.Log("Info: " + info);
-        
+
 
         if (gazeHeadObjectData.Count < dataNumber)
         {
@@ -95,6 +98,13 @@ public class DataRecorder_DGaze_ET : MonoBehaviour
         }
     }
 
+    float SanitizeFloat(float value)
+    {
+        if (float.IsNaN(value) || float.IsInfinity(value))
+            return 0f;
+        return value;
+    }
+
     struct Coordinate
     {
         public float posX;
@@ -107,7 +117,7 @@ public class DataRecorder_DGaze_ET : MonoBehaviour
     Coordinate ScreenCoord2AngularCoord(Coordinate ScreenCoord)
     {
         // the parameters of our Hmd (HTC Vive).
-        // the vertical fov of HTC VIVE PRE is fixed to 110 degree.       
+        // the vertical fov of HTC VIVE PRE is fixed to 110 degree.
         float VerticalFOV = Mathf.PI * 110 / 180;
         // the size of a half screen.
         float ScreenWidth = 1080;

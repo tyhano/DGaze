@@ -2,12 +2,14 @@
 using NetMQ;
 using NetMQ.Sockets;
 using UnityEngine;
-using System.Threading;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 
 public class Requester : RunAbleThread
 {
     public string recordingsString;
+    static readonly Regex FloatRegex = new Regex(@"[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?|nan", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     protected override void Run()
     {
@@ -36,12 +38,42 @@ public class Requester : RunAbleThread
 
                     if (gotMessage)
                     {
+                        UpdatePredictedGaze(message);
                         Debug.Log("On-Screen Gaze Position: " + message);
-                    }                   
+                    }
                 }
             }
         }
 
         NetMQConfig.Cleanup(); // this line is needed to prevent unity freeze after one use, not sure why yet
+    }
+
+    void UpdatePredictedGaze(string message)
+    {
+        MatchCollection matches = FloatRegex.Matches(message ?? "");
+        if (matches.Count < 2)
+        {
+            GazeDebugState.ClearPredictedGaze();
+            return;
+        }
+
+        bool okX = TryParseFiniteFloat(matches[0].Value, out float gazeX);
+        bool okY = TryParseFiniteFloat(matches[1].Value, out float gazeY);
+        if (!okX || !okY)
+        {
+            GazeDebugState.ClearPredictedGaze();
+            return;
+        }
+
+        GazeDebugState.SetPredictedGaze(new Vector2(gazeX, gazeY));
+    }
+
+    bool TryParseFiniteFloat(string text, out float value)
+    {
+        if (!float.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
+            return false;
+        if (float.IsNaN(value) || float.IsInfinity(value))
+            return false;
+        return true;
     }
 }
