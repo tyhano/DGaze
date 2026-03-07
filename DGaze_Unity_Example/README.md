@@ -49,5 +49,11 @@ Step 2: Use Unity to open "Unity_Client" and run "Unity_Client/Assets/Unity_Clie
 
 Run DGaze_ET Model:  
 Step 1: Run "DGaze_Server/DGaze_ET_Server.py".  
-Step 2: Use Unity to open "Unity_Client" and run "Unity_Client/Assets/Unity_Client_DGaze_ET.unity".  
+Step 2: Use Unity to open "Unity_Client" and run "Unity_Client/Assets/Unity_Client_DGaze_ET.unity".
+
+Collect Training Data for Your Scene:
+1. In Unity, attach `DGazeETDataCollector.cs` to an active GameObject in your scene.
+2. Assign `headCamera` and `DynamicObjects` references in Inspector.
+3. Run the scene to record CSV frames at `Application.persistentDataPath/DGazeRecords/dgaze_et_frames.csv`.
+4. Convert the recorded CSV to `trainingX.npy`, `trainingY.npy`, `testX.npy`, `testY.npy` for `DGaze/scripts/DGaze_ET.py`.
 
